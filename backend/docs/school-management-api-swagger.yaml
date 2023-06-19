@@ -1,0 +1,295 @@
+openapi: 3.0.0
+servers: []
+info:
+  version: "1.0"
+  title: School Management API
+  description: |
+    Backend API for the school manager API
+tags:
+  - name: Users
+    description: API related to a managing student marks.
+
+paths:
+  /users:
+    get:
+      summary: Retrieve the list of users.
+      description: |
+        This will retrieve the list of users in the system.  Pagination is supported.  Only admins are allowed
+        to access this.
+      tags:
+        - Users
+      operationId: getUsers
+      parameters:
+        - name: page
+          description: The number of items to skip before starting to collect the result set.
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          description: The numbers of items to return.
+          in: query
+          schema:
+            type: integer
+            default: 5
+        - name: sortBy
+          description: |
+            Sort result by field.
+          in: query
+          schema:
+            type: string
+            default: firstName
+            enum:
+              - firstName
+              - lastName
+              - studentNumber
+              - email
+        - name: sortOrder
+          description: |
+            The sorting order (asc/desc).
+          in: query
+          schema:
+            type: string
+            default: desc
+            enum:
+              - asc
+              - desc
+        - in: query
+          name: search
+          description: Search by first name, last name, email or student number.
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/UserArrayResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    post:
+      summary: Create a new user.
+      description: |
+        Create a new user.  Only student manager are allowed to access this.
+      tags:
+        - Users
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          $ref: "#/components/responses/UserResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /users/{userId}:
+    get:
+      summary: Retrieve a single user.
+      description: |
+        Retrieve a single user by id.  Only student managers are allowed to access this.
+      tags:
+        - Users
+      operationId: getUserById
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "200":
+          $ref: "#/components/responses/UserResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    put:
+      summary: Update a single user.
+      description: |
+        Update a single user by id.  Only student managers are allowed to access this.
+      tags:
+        - Users
+      operationId: updateUserById
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          $ref: "#/components/responses/UserResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    delete:
+      summary: Delete a single user.
+      description: |
+        Delete a single user by id.  Only student managers are allowed to access this.
+      tags:
+        - Users
+      operationId: deleteUserById
+      parameters:
+        - $ref: "#/components/parameters/UserId"
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  
+components:
+  parameters:
+    UserId:
+      name: userId
+      in: path
+      required: true
+      description: The user id
+      schema:
+        type: string
+
+  schemas:
+    Error:
+      description: Error response.
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
+    User:
+      type: object
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - cellphone
+        - studentNumber
+        - dateOfBirth
+        - currAverage
+        - aveScore
+        - createdBy
+        - createdOn
+        - updatedBy
+        - updatedOn
+        - isDeleted
+      properties:
+        id:
+          type: integer
+          description: The id of the user.
+        firstName:
+          type: string
+          description: User's first name.
+        lastName:
+          type: string
+          description: User's last name.
+        email:
+          type: string
+          description: User's email address.
+        cellphone:
+          type: string
+          description: User's cellphone.
+        studentNumber:
+          type: string
+          description: User's student number.
+        dateOfBirth:
+          type: string
+          format: date
+          description: User's birthday.
+        currAverage:
+          type: number
+          description: Students current score average.
+        aveScore:
+          type: number
+          description: Students group average.
+        createdBy:
+          type: string
+          description: User that created the record.
+        createdOn:
+          type: string
+          format: date-time
+          description: Date that record was created.
+        updatedBy:
+          type: string
+          description: User that updated the record.
+        updatedOn:
+          type: string
+          format: date-time
+          description: Date that record was updated.
+        isDeleted:
+          type: boolean
+          description: Keeps track of soft deletes.
+          
+  responses:
+    UserResponse:
+      description: Response that provides information about a user.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/User"
+
+    UserArrayResponse:
+      description: The User array response.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              total:
+                type: integer
+              items:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+    NoContent:
+      description: |
+        The operation completed successfully but no content is needed
+        in the response.
+
+    BadRequest:
+      description: Bad request - Problem with the request (E.g. Missing parameters)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Forbidden:
+      description: Forbidden - User is not allowed to access this end point
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    NotFound:
+      description: Not found - Requested entity is not found in database
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Conflict:
+      description: Conflict - Request creates conflict in database. E.g. Using duplicate names
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    InternalServerError:
+      description: Internal Server Error - Request is valid but operation failed at server side
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"

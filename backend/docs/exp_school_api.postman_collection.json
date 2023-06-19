@@ -1,0 +1,254 @@
+{
+	"info": {
+		"_postman_id": "8abf6017-e230-4885-986e-7325fc04e219",
+		"name": "exp_school_api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "USER",
+			"item": [
+				{
+					"name": "Add New User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "280dc0ed-5ff2-43e0-b3b2-6f0fd817b8f1",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"userId1\", data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n            \"firstName\": \"Chrissy\",\n            \"lastName\": \"Wolff\",\n            \"email\": \"chrissyw@yahoo.com\",\n            \"studentNumber\": \"Chrissy-Wolff2\",\n            \"dateOfBirth\": \"1995-07-11\",\n            \"cellphone\": \"+7245672254\",\n            \"currScore\": 66,\n            \"aveScore\": 88,\n            \"isDeleted\": false\n        }"
+						},
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User By Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b7591fdb-6302-465d-aa7c-3390211a6d65",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{userId1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{userId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add New User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"firstName2\",\n    \"lastName\": \"lastName2\",\n    \"username\": \"username2\",\n    \"email\": \"name2@email.com\",\n    \"role\": \"regular\",\n    \"password\": \"7654321\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"firstNameUpdate\",\n    \"lastName\": \"lastNameUpdate\",\n    \"username\": \"usernameUpdate\",\n    \"email\": \"nameUpdate@email.com\",\n    \"role\": \"admin\",\n    \"password\": \"1234567Update\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{userId1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{userId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users?sortBy=firstName&limit=5&search=Valentina",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "sortBy",
+									"value": "firstName"
+								},
+								{
+									"key": "sortOrder",
+									"value": "asc",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "search",
+									"value": "Valentina"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{URL}}/users/{{userId1}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"{{userId1}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
